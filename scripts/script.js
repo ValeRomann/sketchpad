@@ -1,9 +1,10 @@
 const body = document.querySelector('body');
 const mainContainer = document.createElement('div');
+mainContainer.setAttribute('class', 'main-container');
 body.appendChild(mainContainer);
 
 const sketchPad = document.createElement('div');
-sketchPad.setAttribute('class', 'sketchPad');
+sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
 /* CREATING DIVS
 const div1 = document.createElement('div');
@@ -57,10 +58,11 @@ sketchPad.appendChild(div16);
 
 createSketchPad(sketchPad, 4);
 
-function createSketchPad(parrentElem, widthNum) {    
+function createSketchPad(parentElem, widthNum) {    
     for (let i = 1; i <= widthNum * widthNum; i++) {
         let dotDiv = document.createElement('div');
-        sketchPad.setAttribute('class', 'dot');
-        parrentElem.appendChild(dotDiv);
+        dotDiv.setAttribute('class', 'dot');
+        parentElem.appendChild(dotDiv);
     }
 }
+
