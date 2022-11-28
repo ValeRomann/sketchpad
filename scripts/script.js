@@ -1,4 +1,8 @@
+let sketchWidth = 32;
+let dotColor = 'black';
+
 const body = document.querySelector('body');
+
 const mainContainer = document.createElement('div');
 mainContainer.setAttribute('class', 'main-container');
 body.appendChild(mainContainer);
@@ -6,63 +10,45 @@ body.appendChild(mainContainer);
 const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
-/* CREATING DIVS
-const div1 = document.createElement('div');
-sketchPad.appendChild(div1);
 
-const div2 = document.createElement('div');
-sketchPad.appendChild(div2);
+createDivGrid(sketchPad, sketchWidth);
 
-const div3 = document.createElement('div');
-sketchPad.appendChild(div3);
+sketchPad.onmousedown = () => fillDots(dotColor);
+sketchPad.onmouseup = () => stopFillDots(dotColor);
 
-const div4 = document.createElement('div');
-sketchPad.appendChild(div4);
 
-const div5 = document.createElement('div');
-sketchPad.appendChild(div5);
+function fillDots(color) {
+    const dots = document.getElementsByClassName('dot');
+    for (let dot of dots) {
+        dot.onmouseover = () => changeBGC(dot, color);
+    }
+}
 
-const div6 = document.createElement('div');
-sketchPad.appendChild(div6);
+function stopFillDots(color) {
+    const dots = document.getElementsByClassName('dot');
+    for (let dot of dots) {
+        dot.onmouseover = '';
+    }
+}
 
-const div7 = document.createElement('div');
-sketchPad.appendChild(div7);
+function changeBGC(elem, color) {
+    elem.style.backgroundColor = color;
+}
 
-const div8 = document.createElement('div');
-sketchPad.appendChild(div8);
+function setGrid(parentElem, widthNum) {
+    parentElem.style.display = 'grid';
 
-const div9 = document.createElement('div');
-sketchPad.appendChild(div9);
+    for (let i = 0; i < widthNum; i++) {
+        parentElem.style.gridTemplateColumns += ' auto';
+    }
+}
 
-const div10 = document.createElement('div');
-sketchPad.appendChild(div10);
+function createDivGrid(parentElem, widthNum) {    
+    setGrid(parentElem, widthNum);
 
-const div11 = document.createElement('div');
-sketchPad.appendChild(div11);
-
-const div12 = document.createElement('div');
-sketchPad.appendChild(div12);
-
-const div13 = document.createElement('div');
-sketchPad.appendChild(div13);
-
-const div14 = document.createElement('div');
-sketchPad.appendChild(div14);
-
-const div15 = document.createElement('div');
-sketchPad.appendChild(div15);
-
-const div16 = document.createElement('div');
-sketchPad.appendChild(div16);
-*/
-
-createSketchPad(sketchPad, 4);
-
-function createSketchPad(parentElem, widthNum) {    
     for (let i = 1; i <= widthNum * widthNum; i++) {
         let dotDiv = document.createElement('div');
         dotDiv.setAttribute('class', 'dot');
         parentElem.appendChild(dotDiv);
     }
 }
-
