@@ -25,9 +25,9 @@ widthButton.onclick = () => {
 }
 
 sketchPad.onmousedown = () => fillDots(dotColor);
-sketchPad.onmouseup = () => stopFillDots();
 sketchPad.ontouchstart = () => fillDots(dotColor);
-sketchPad.ontouchend = () => stopFillDots();
+sketchPad.onmouseup = () => stopFillDots(dotColor);
+sketchPad.ontouchend = () => stopFillDots(dotColor);
 
 function deleteGrid(parentElem) {
     parentElem.innerHTML = '';
@@ -35,7 +35,7 @@ function deleteGrid(parentElem) {
 
 function fillDots(color) {
     const dots = document.getElementsByClassName('dot');
-    for (let dot of dots) {        
+    for (let dot of dots) {
         dot.onclick = () => changeBGC(dot, color);
         dot.onmouseover = () => changeBGC(dot, color);
         dot.ontouchmove = () => changeBGC(dot, color);
@@ -46,7 +46,7 @@ function stopFillDots() {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onmouseover = '';
-        dot.ontouchmove = () => changeBGC(dot, color);
+        dot.ontouchmove = '';
     }
 }
 
@@ -68,6 +68,7 @@ function createDivGrid(parentElem, widthNum, borderWidth) {
     const parentMaxWidth = parseInt(window.getComputedStyle(parentElem).maxWidth);
     for (let i = 1; i <= widthNum * widthNum; i++) {
         let dotDiv = document.createElement('div');
+        dotDiv.setAttribute('class', 'dot');
         dotDiv.style.border = borderWidth + 'px solid grey';
         if (windowWidth < parentMaxWidth) {
             dotDiv.style.padding = (windowWidth / widthNum / 2 - borderWidth * 2) + 'px';
