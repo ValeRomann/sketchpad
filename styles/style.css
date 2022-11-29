@@ -11,8 +11,6 @@ body {
     align-items: center;
 }
 
-.dot {
-    border: 1px solid grey;
-    text-align: center;
-    padding: 5px;
+.sketchpad {
+    max-width: 420px;
 }
