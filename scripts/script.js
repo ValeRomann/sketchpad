@@ -1,5 +1,5 @@
-let sketchWidth = 12;
-let dotColor = 'red';
+let sketchWidth = 8;
+let dotColor = 'grey';
 let dotBorderWidth = 1;
 
 const body = document.querySelector('body');
@@ -24,18 +24,20 @@ const cleanAllButton = document.createElement('button');
 cleanAllButton.textContent = 'Clean pad';
 controlPanel.appendChild(cleanAllButton);
 
+const eraseByDotButton = document.createElement('button');
+eraseByDotButton.textContent = 'Eraser';
+controlPanel.appendChild(eraseByDotButton);
+
 const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
 
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
-cleanAllButton.onclick = () => {
-    const dots = document.getElementsByClassName('dot');
-    for (let dot of dots) {
-        dot.style.backgroundColor = 'transparent';
-    }
-}
+sketchPad.onmousedown = () => fillDots(dotColor);
+sketchPad.ontouchstart = () => fillDots(dotColor);
+sketchPad.onmouseup = () => stopFillDots(dotColor);
+sketchPad.ontouchend = () => stopFillDots(dotColor);
 
 widthButton.onclick = () => {
     const input = +prompt("input width number", "16");
@@ -47,11 +49,14 @@ widthButton.onclick = () => {
 
 switchBorderButton.onclick = () => switchBorder();
 
-sketchPad.onmousedown = () => fillDots(dotColor);
-sketchPad.ontouchstart = () => fillDots(dotColor);
-sketchPad.onmouseup = () => stopFillDots(dotColor);
-sketchPad.ontouchend = () => stopFillDots(dotColor);
+cleanAllButton.onclick = () => {
+    const dots = document.getElementsByClassName('dot');
+    for (let dot of dots) {
+        dot.style.backgroundColor = 'transparent';
+    }
+}
 
+eraseByDotButton.onclick = () => dotColor = 'transparent';
 
 function switchBorder() {
     if (dotBorderWidth === 0) dotBorderWidth = 1;
