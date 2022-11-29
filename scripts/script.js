@@ -20,16 +20,26 @@ const switchBorderButton = document.createElement('button');
 switchBorderButton.textContent = 'Switch border';
 controlPanel.appendChild(switchBorderButton);
 
+const cleanAllButton = document.createElement('button');
+cleanAllButton.textContent = 'Clean pad';
+controlPanel.appendChild(cleanAllButton);
+
 const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
 
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
+cleanAllButton.onclick = () => {
+    const dots = document.getElementsByClassName('dot');
+    for (let dot of dots) {
+        dot.style.backgroundColor = 'transparent';
+    }
+}
 
 widthButton.onclick = () => {
     const input = +prompt("input width number", "16");
-    if (!input) return;
+    if (!input || input < 1) return;
     sketchWidth = input;  
     deleteGrid(sketchPad);
     createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
