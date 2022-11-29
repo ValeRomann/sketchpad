@@ -1,5 +1,5 @@
 let sketchWidth = 32;
-let dotColor = 'black';
+let dotColor = 'red';
 
 const body = document.querySelector('body');
 
@@ -14,22 +14,27 @@ mainContainer.appendChild(sketchPad);
 createDivGrid(sketchPad, sketchWidth);
 
 sketchPad.onmousedown = () => fillDots(dotColor);
-sketchPad.onmouseup = () => stopFillDots(dotColor);
+sketchPad.onmouseup = () => stopFillDots();
+sketchPad.ontouchstart = () => fillDots(dotColor);
+sketchPad.ontouchend = () => stopFillDots();
 
 
 function fillDots(color) {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onmouseover = () => changeBGC(dot, color);
+        dot.ontouchmove = () => changeBGC(dot, color);
     }
 }
 
-function stopFillDots(color) {
+function stopFillDots() {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onmouseover = '';
+        dot.ontouchmove = () => changeBGC(dot, color);
     }
 }
+
 
 function changeBGC(elem, color) {
     elem.style.backgroundColor = color;
