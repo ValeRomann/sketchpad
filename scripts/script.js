@@ -1,6 +1,8 @@
 let sketchWidth = 8;
 let dotColor = 'grey';
+let reserveColor = dotColor;
 let dotBorderWidth = 1;
+let eraserActive = false;
 
 const body = document.querySelector('body');
 
@@ -56,7 +58,17 @@ cleanAllButton.onclick = () => {
     }
 }
 
-eraseByDotButton.onclick = () => dotColor = 'transparent';
+eraseByDotButton.onclick = (e) => {
+    eraserActive = !eraserActive;
+    
+    if (eraserActive) {
+        e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
+    } else {
+        e.target.style.backgroundColor = 'transparent';        
+    }
+    if (dotColor !== 'transparent') dotColor = 'transparent';
+    else dotColor = reserveColor;
+}
 
 function switchBorder() {
     if (dotBorderWidth === 0) dotBorderWidth = 1;
