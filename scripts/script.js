@@ -1,5 +1,5 @@
 let sketchWidth = 8;
-let dotColor = 'grey';
+let dotColor = '';
 let reserveColor = dotColor;
 let dotBorderWidth = 1;
 let eraserActive = false;
@@ -13,6 +13,10 @@ body.appendChild(mainContainer);
 const controlPanel = document.createElement('div');
 mainContainer.setAttribute('class', 'control-panel');
 mainContainer.appendChild(controlPanel);
+
+const inputColor = document.createElement('input');
+inputColor.type = 'color';
+controlPanel.appendChild(inputColor);
 
 const widthButton = document.createElement('button');
 widthButton.textContent = 'Set width';
@@ -36,14 +40,21 @@ mainContainer.appendChild(sketchPad);
 
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
-sketchPad.onmousedown = () => fillDots(dotColor);
-sketchPad.ontouchstart = () => fillDots(dotColor);
+sketchPad.onmousedown = () => {
+    dotColor = inputColor.value;
+    fillDots(dotColor);
+}
+sketchPad.ontouchstart = () => {
+    dotColor = inputColor.value;
+    fillDots(dotColor);
+}
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
 
 widthButton.onclick = () => {
-    const input = +prompt("input width number", "16");
+    let input = +prompt("input width number", "16");
     if (!input || input < 1) return;
+    if (input > 100) input = 100;
     sketchWidth = input;  
     deleteGrid(sketchPad);
     createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
