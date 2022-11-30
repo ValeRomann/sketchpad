@@ -23,7 +23,7 @@ body {
 button {
     background-color: transparent;
     border: 1px solid lightgrey;
-    padding: 8px;
+    padding: 8px 0;
     width: 100%;
 }
 
