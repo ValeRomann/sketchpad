@@ -45,11 +45,13 @@ let multiColorMode = false;
 
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
-sketchPad.onmousedown = () => {
+sketchPad.onmousedown = (e) => {
+    changeBGC(e.target, dotColor);
     fillDots(dotColor);
 }
-sketchPad.ontouchstart = () => {
+sketchPad.ontouchstart = (e) => {
     fillDots(dotColor);
+    target.ontouchmove = () => changeBGC(dot, color);
 }
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
@@ -111,7 +113,7 @@ function deleteGrid(parentElem) {
     parentElem.innerHTML = '';
 }
 
-function fillDots(color) {
+function fillDots(color, target) {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onclick = () => changeBGC(dot, color);
