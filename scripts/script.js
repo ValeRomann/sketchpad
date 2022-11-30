@@ -33,13 +33,13 @@ const darkenButton = document.createElement('button');
 darkenButton.textContent = 'Darken';
 controlPanel.appendChild(darkenButton);
 
-const cleanAllButton = document.createElement('button');
-cleanAllButton.textContent = 'Clean pad';
-controlPanel.appendChild(cleanAllButton);
-
 const eraseByDotButton = document.createElement('button');
 eraseByDotButton.textContent = 'Eraser';
 controlPanel.appendChild(eraseByDotButton);
+
+const cleanAllButton = document.createElement('button');
+cleanAllButton.textContent = 'Clean pad';
+controlPanel.appendChild(cleanAllButton);
 
 const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
@@ -56,6 +56,9 @@ let darken = false;
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
 sketchPad.onmousedown = (e) => {
+    color = window.getComputedStyle(e.target).backgroundColor;
+    console.log(color);
+    if ((brighten || darken) && !multiColorMode) dotColor = changeBrightness(dotColor);
     changeBGC(e.target, dotColor);
     fillDots(dotColor);
 }
@@ -79,9 +82,37 @@ widthButton.onclick = () => {
 switchBorderButton.onclick = (e) => {
     if (dotBorderWidth === 0) dotBorderWidth = 1;
     else dotBorderWidth = 0;
-    changeButtonStateColor(e, dotBorderWidth);
+    changeButtonStateColor(e.target, dotBorderWidth);
     switchBorder();
-};
+}
+
+multiColorButton.onclick = (e) => {
+    multiColorMode = !multiColorMode;
+    changeButtonStateColor(e.target, multiColorMode);
+}
+
+brightenButton.onclick = (e) => {
+    brighten = !brighten
+    changeButtonStateColor(e.target, brighten);
+    if (brighten) if (darken) {
+        darken = !darken
+        changeButtonStateColor(darkenButton, darken);
+    }
+}
+
+darkenButton.onclick = (e) => {
+    darken = !darken
+    changeButtonStateColor(e.target, darken);
+    if (darken) if (brighten) {
+        brighten = !brighten
+        changeButtonStateColor(brightenButton, brighten);
+    }
+}
+
+eraseByDotButton.onclick = (e) => {
+    eraserActive = !eraserActive;
+    changeButtonStateColor(e.target, eraserActive);
+}
 
 cleanAllButton.onclick = () => {
     const dots = document.getElementsByClassName('dot');
@@ -90,25 +121,21 @@ cleanAllButton.onclick = () => {
     }
 }
 
-eraseByDotButton.onclick = (e) => {
-    eraserActive = !eraserActive;
-    changeButtonStateColor(e, eraserActive);
-}
-
-multiColorButton.onclick = (e) => {
-    multiColorMode = !multiColorMode;
-    changeButtonStateColor(e, multiColorMode);
-};
-
 function changeButtonStateColor(e, mode) {
-    if (mode) e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
-    else e.target.style.backgroundColor = 'transparent';
+    if (mode) e.style.backgroundColor = 'rgba(0,0,0,0.05)';
+    else e.style.backgroundColor = 'transparent';
 }
 
 function setRandomColor() {
-    return '#' + (Math.floor(Math.random() * 255)).toString(16) +
-                 (Math.floor(Math.random() * 255)).toString(16) +
-                 (Math.floor(Math.random() * 255)).toString(16);
+    return '#' +
+        fixRGBColorLength((Math.floor(Math.random() * 255)).toString(16)) +
+        fixRGBColorLength((Math.floor(Math.random() * 255)).toString(16)) +
+        fixRGBColorLength((Math.floor(Math.random() * 255)).toString(16));
+}
+
+function fixRGBColorLength(colorString) {
+    if (colorString.length < 2) return '0' + colorString;
+    return colorString;
 }
 
 function switchBorder() {
@@ -123,7 +150,7 @@ function deleteGrid(parentElem) {
     parentElem.innerHTML = '';
 }
 
-function fillDots(color, target) {
+function fillDots(color) {    
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onclick = () => changeBGC(dot, color);
@@ -140,10 +167,35 @@ function stopFillDots() {
     }
 }
 
-function changeBGC(elem, color) {
+function changeBGC(elem, color) {  
     if (eraserActive) color = 'transparent';
     else if (multiColorMode) color = setRandomColor();
     elem.style.backgroundColor = color;
+}
+
+function changeBrightness(color) {
+    if (eraserActive || multiColorMode) return;
+    let processColorValue = color.slice(1);
+    const processColorValueArray = [
+        parseInt(processColorValue.slice(0,2), 16),
+        parseInt(processColorValue.slice(2,4), 16),
+        parseInt(processColorValue.slice(4), 16)
+    ];
+
+    for (let i  = 0; i < processColorValueArray.length; i++) {
+        if (brighten) {
+            if (processColorValueArray[i] <= 230) processColorValueArray[i] += 25;
+            else processColorValueArray[i] = 255;
+        } else {
+            if (darken) {
+                if (processColorValueArray[i] >= 25) processColorValueArray[i] -= 25;
+                else processColorValueArray[i] = 0;
+            }
+        }     
+        
+        processColorValueArray[i] = fixRGBColorLength(processColorValueArray[i].toString(16));
+    }
+    return '#' + processColorValueArray.join('');
 }
 
 function setGrid(parentElem, sketchWidth) {
