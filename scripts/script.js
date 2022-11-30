@@ -1,10 +1,3 @@
-let sketchWidth = 8;
-let dotColor = '';
-let reserveColor = dotColor;
-let dotBorderWidth = 1;
-let eraserActive = false;
-let multiColorMode = false;
-
 const body = document.querySelector('body');
 
 const mainContainer = document.createElement('div');
@@ -44,27 +37,23 @@ const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
 
+let sketchWidth = 8;
+let dotColor = inputColor.value;
+let dotBorderWidth = 1;
+let eraserActive = false;
+let multiColorMode = false;
+
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
 sketchPad.onmousedown = () => {
-    if (!eraserActive) dotColor = inputColor.value;
     fillDots(dotColor);
 }
 sketchPad.ontouchstart = () => {
-    if (!eraserActive) dotColor = inputColor.value;
     fillDots(dotColor);
 }
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
 
-multiColorButton.onclick = (e) => {
-    multiColorMode = !multiColorMode;
-    if (multiColorMode) {
-        e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
-    } else {
-        e.target.style.backgroundColor = 'transparent';        
-    }
-};
 
 widthButton.onclick = () => {
     let input = +prompt("input width number", "16");
@@ -86,13 +75,20 @@ cleanAllButton.onclick = () => {
 
 eraseByDotButton.onclick = (e) => {
     eraserActive = !eraserActive;
-    if (eraserActive) {
+    changeButtonStateColor(e, eraserActive);
+}
+
+multiColorButton.onclick = (e) => {
+    multiColorMode = !multiColorMode;
+    changeButtonStateColor(e, multiColorMode);
+};
+
+function changeButtonStateColor(e, mode) {
+    if (mode) {
         e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
     } else {
         e.target.style.backgroundColor = 'transparent';        
     }
-    if (dotColor !== 'transparent') dotColor = 'transparent';
-    else dotColor = reserveColor;
 }
 
 function setRandomColor() {
@@ -119,8 +115,8 @@ function fillDots(color) {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onclick = () => changeBGC(dot, color);
-        dot.onmouseover = () => multiColorMode ? setMultiColor(dot) : changeBGC(dot, color);
-        dot.ontouchmove = () => multiColorMode ? setMultiColor(dot) : changeBGC(dot, color);
+        dot.onmouseover = () => changeBGC(dot, color);
+        dot.ontouchmove = () => changeBGC(dot, color);
     }
 }
 
@@ -133,11 +129,9 @@ function stopFillDots() {
 }
 
 function changeBGC(elem, color) {
+    if (multiColorMode) color = setRandomColor();
+    if (eraserActive) color = 'transparent';
     elem.style.backgroundColor = color;
-}
-
-function setMultiColor(elem) {
-    elem.style.backgroundColor = setRandomColor();
 }
 
 function setGrid(parentElem, sketchWidth) {
