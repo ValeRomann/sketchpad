@@ -129,8 +129,8 @@ function stopFillDots() {
 }
 
 function changeBGC(elem, color) {
-    if (multiColorMode) color = setRandomColor();
     if (eraserActive) color = 'transparent';
+    else if (multiColorMode) color = setRandomColor();
     elem.style.backgroundColor = color;
 }
 
