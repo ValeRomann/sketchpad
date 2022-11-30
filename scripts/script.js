@@ -13,17 +13,25 @@ inputColor.type = 'color';
 controlPanel.appendChild(inputColor);
 inputColor.value = setRandomColor();
 
-const multiColorButton = document.createElement('button');
-multiColorButton.textContent = 'Multi color mode';
-controlPanel.appendChild(multiColorButton);
-
 const widthButton = document.createElement('button');
 widthButton.textContent = 'Set width';
 controlPanel.appendChild(widthButton);
 
 const switchBorderButton = document.createElement('button');
-switchBorderButton.textContent = 'Switch border';
+switchBorderButton.textContent = 'Enable grid';
 controlPanel.appendChild(switchBorderButton);
+
+const multiColorButton = document.createElement('button');
+multiColorButton.textContent = 'Multi color mode';
+controlPanel.appendChild(multiColorButton);
+
+const brightenButton = document.createElement('button');
+brightenButton.textContent = 'Brighten';
+controlPanel.appendChild(brightenButton);
+
+const darkenButton = document.createElement('button');
+darkenButton.textContent = 'Darken';
+controlPanel.appendChild(darkenButton);
 
 const cleanAllButton = document.createElement('button');
 cleanAllButton.textContent = 'Clean pad';
@@ -39,9 +47,11 @@ mainContainer.appendChild(sketchPad);
 
 let sketchWidth = 8;
 let dotColor = inputColor.value;
-let dotBorderWidth = 1;
+let dotBorderWidth = 0;
 let eraserActive = false;
 let multiColorMode = false;
+let brighten = false;
+let darken = false;
 
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
@@ -66,7 +76,12 @@ widthButton.onclick = () => {
     createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 }
 
-switchBorderButton.onclick = () => switchBorder();
+switchBorderButton.onclick = (e) => {
+    if (dotBorderWidth === 0) dotBorderWidth = 1;
+    else dotBorderWidth = 0;
+    changeButtonStateColor(e, dotBorderWidth);
+    switchBorder();
+};
 
 cleanAllButton.onclick = () => {
     const dots = document.getElementsByClassName('dot');
@@ -86,11 +101,8 @@ multiColorButton.onclick = (e) => {
 };
 
 function changeButtonStateColor(e, mode) {
-    if (mode) {
-        e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
-    } else {
-        e.target.style.backgroundColor = 'transparent';        
-    }
+    if (mode) e.target.style.backgroundColor = 'rgba(0,0,0,0.05)';
+    else e.target.style.backgroundColor = 'transparent';
 }
 
 function setRandomColor() {
@@ -100,8 +112,6 @@ function setRandomColor() {
 }
 
 function switchBorder() {
-    if (dotBorderWidth === 0) dotBorderWidth = 1;
-    else dotBorderWidth = 0;
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.style.borderWidth = dotBorderWidth + 'px';
