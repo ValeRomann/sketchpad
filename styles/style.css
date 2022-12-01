@@ -21,7 +21,9 @@ body {
 
 h1 {
     font-size: 72px;
-    color: #111
+    color: #111;
+    width: 100%;
+    text-align: center;
 }
 
 .main-container {
@@ -83,6 +85,9 @@ label {
 }
 
 @media screen and (max-width: 712px) {
+    h1 {
+        font-size: 32px;
+    }
     .main-container {
         max-width: 512px;
         flex-direction: column;
