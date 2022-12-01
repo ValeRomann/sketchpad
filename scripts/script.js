@@ -56,11 +56,11 @@ let darken = false;
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
 sketchPad.onmousedown = (e) => {
-    color = window.getComputedStyle(e.target).backgroundColor;
-    console.log(color);
-    if ((brighten || darken) && !multiColorMode) dotColor = changeBrightness(dotColor);
-    changeBGC(e.target, dotColor);
-    fillDots(dotColor);
+    let palletColor = inputColor.value;
+    let currentColor = palletColor;
+    if ((brighten || darken) && !multiColorMode) currentColor = changeBrightness(palletColor);
+    changeBGC(e.target, currentColor);
+    fillDots(currentColor);
 }
 sketchPad.ontouchstart = (e) => {
     fillDots(dotColor);
@@ -117,7 +117,7 @@ eraseByDotButton.onclick = (e) => {
 cleanAllButton.onclick = () => {
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
-        dot.style.backgroundColor = 'transparent';
+        dot.style.backgroundColor = 'white';
     }
 }
 
@@ -167,22 +167,36 @@ function stopFillDots() {
     }
 }
 
-function changeBGC(elem, color) {  
-    if (eraserActive) color = 'transparent';
+function changeBGC(elem, color) {
+    let currentElemColor = window.getComputedStyle(elem).backgroundColor;
+    if ((brighten || darken) && !multiColorMode) {
+        color = changeBrightness(currentElemColor);
+    }    
+    if (eraserActive) color = 'white';
     else if (multiColorMode) color = setRandomColor();
     elem.style.backgroundColor = color;
 }
 
-function changeBrightness(color) {
-    if (eraserActive || multiColorMode) return;
+function convertComputedRGBColorToRGBColorArray(colorString){
+    return colorString.slice(4,-1).split(', ')
+}
+/*
+function convertHexColorToRGBColorArray() {
     let processColorValue = color.slice(1);
     const processColorValueArray = [
         parseInt(processColorValue.slice(0,2), 16),
         parseInt(processColorValue.slice(2,4), 16),
         parseInt(processColorValue.slice(4), 16)
     ];
-
+    return processColorValueArray;
+}
+*/
+function changeBrightness(color) {
+    if (eraserActive || multiColorMode) return;
+    
+    const processColorValueArray = convertComputedRGBColorToRGBColorArray(color);
     for (let i  = 0; i < processColorValueArray.length; i++) {
+        processColorValueArray[i] = +processColorValueArray[i];
         if (brighten) {
             if (processColorValueArray[i] <= 230) processColorValueArray[i] += 25;
             else processColorValueArray[i] = 255;
@@ -212,6 +226,7 @@ function createDivGrid(parentElem, sketchWidth, dotBorderWidth) {
         let dotDiv = document.createElement('div');
         dotDiv.setAttribute('class', 'dot');
         dotDiv.style.border = dotBorderWidth + 'px solid lightgrey';
+        dotDiv.style.backgroundColor = 'white';
         setPadding(parentElem, dotDiv);
         parentElem.appendChild(dotDiv);
     }
