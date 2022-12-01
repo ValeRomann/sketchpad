@@ -29,10 +29,6 @@ widthLabel.setAttribute('for', 'width-range');
 widthLabel.textContent = '8 X 8';
 inputWidthDiv.appendChild(widthLabel);
 
-const widthButton = document.createElement('button');
-widthButton.textContent = 'Set width';
-controlPanel.appendChild(widthButton);
-
 const switchBorderButton = document.createElement('button');
 switchBorderButton.textContent = 'Enable grid';
 controlPanel.appendChild(switchBorderButton);
@@ -88,15 +84,6 @@ sketchPad.ontouchend = () => stopFillDots(dotColor);
 widthInput.onchange = () => {
     sketchWidth = widthInput.value;
     widthLabel.textContent = sketchWidth + ' X ' + sketchWidth;
-    deleteGrid(sketchPad);
-    createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
-}
-
-widthButton.onclick = () => {
-    let input = +prompt("input width number", "16");
-    if (!input || input < 1) return;
-    if (input > 100) input = 100;
-    sketchWidth = input;  
     deleteGrid(sketchPad);
     createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 }
