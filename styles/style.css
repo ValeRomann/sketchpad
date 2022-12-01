@@ -5,6 +5,7 @@
     font-size: 14px;
     color: #444;
     text-align: center;
+    user-select: none;
 }
 
 html {
