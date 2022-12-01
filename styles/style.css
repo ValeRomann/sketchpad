@@ -122,6 +122,10 @@ label {
         width: 50%;
     }
 
+    .buttons-group:first-child {
+        flex-wrap: nowrap;
+    }
+
     .buttons-group:last-child button {
         width: 100%;
     }
