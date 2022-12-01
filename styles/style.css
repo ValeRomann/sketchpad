@@ -102,12 +102,6 @@ input[type="range"]::-webkit-slider-thumb {
   background: gray;
   transition: background .3s ease-in-out;
 }
-input[type=range]::-webkit-slider-runnable-track  {
-    -webkit-appearance: none;
-    box-shadow: none;
-    border: none;
-    background: transparent;
-  }
 
 @media screen and (max-width: 712px) {
     body {
