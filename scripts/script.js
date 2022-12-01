@@ -22,7 +22,7 @@ inputColor.value = setRandomColor();
 colorButtonsDiv.appendChild(inputColor);
 
 const multiColorButton = document.createElement('button');
-multiColorButton.textContent = 'Multi color mode';
+multiColorButton.textContent = 'Multi color';
 colorButtonsDiv.appendChild(multiColorButton);
 
 const brightenButton = document.createElement('button');
@@ -59,7 +59,7 @@ gridSettingsDiv.appendChild(inputWidthDiv);
 const widthInput = document.createElement('input');
 widthInput.setAttribute('type', 'range');
 widthInput.setAttribute('min', '1');
-widthInput.setAttribute('max', '32');
+widthInput.setAttribute('max', '100');
 widthInput.setAttribute('id', 'width-range');
 widthInput.value = '8';
 inputWidthDiv.appendChild(widthInput);
@@ -201,6 +201,7 @@ function fillDots(color) {
         }
         dot.ontouchmove = (e) => {
             e.preventDefault();
+            console.log(e);
             e.target.style.backgroundColor = changeBGC(dot, color);
         }
     }
