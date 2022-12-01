@@ -80,15 +80,12 @@ let darken = false;
 createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 
 sketchPad.onmousedown = (e) => {
-    let palletColor = inputColor.value;
-    let currentColor = palletColor;
-    if ((brighten || darken)) currentColor = changeBrightness(palletColor);
-    changeBGC(e.target, currentColor);
-    fillDots(currentColor);
+    e.preventDefault();
+    startPainting(e);
 }
 sketchPad.ontouchstart = (e) => {
-    fillDots(dotColor);
-    e.target.ontouchmove = () => changeBGC(dot, color);
+    e.preventDefault();
+    startPainting(e);
 }
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
@@ -99,8 +96,7 @@ inputColor.onchange = () => {
     multiColorMode = false;
     changeButtonStateColor(brightenButton, brighten);
     changeButtonStateColor(darkenButton, darken);
-    changeButtonStateColor(multiColorButton, multiColorMode);
-    
+    changeButtonStateColor(multiColorButton, multiColorMode);    
 }
 
 widthInput.onchange = (e) => {
@@ -187,16 +183,26 @@ function switchBorder() {
     }
 }
 
-function deleteGrid(parentElem) {
-    parentElem.innerHTML = '';
+function startPainting(e) {
+    let palletColor = inputColor.value;
+    let currentColor = palletColor;
+    if ((brighten || darken)) currentColor = changeBrightness(palletColor);
+    changeBGC(e.target, currentColor);
+    fillDots(currentColor);
 }
 
 function fillDots(color) {    
     const dots = document.getElementsByClassName('dot');
     for (let dot of dots) {
         dot.onclick = () => changeBGC(dot, color);
-        dot.onmouseover = () => changeBGC(dot, color);
-        dot.ontouchmove = () => changeBGC(dot, color);
+        dot.onmouseover = (e) => {
+            e.preventDefault();
+            changeBGC(dot, color);
+        }
+        dot.ontouchmove = (e) => {
+            e.preventDefault();
+            e.target.style.backgroundColor = changeBGC(dot, color);
+        }
     }
 }
 
@@ -223,17 +229,7 @@ function changeBGC(elem, color) {
 function convertComputedRGBColorToRGBColorArray(colorString){
     return colorString.slice(4,-1).split(', ')
 }
-/* RESERVE FUCNCTION
-function convertHexColorToRGBColorArray() {
-    let processColorValue = color.slice(1);
-    const processColorValueArray = [
-        parseInt(processColorValue.slice(0,2), 16),
-        parseInt(processColorValue.slice(2,4), 16),
-        parseInt(processColorValue.slice(4), 16)
-    ];
-    return processColorValueArray;
-}
-*/
+
 function changeBrightness(color) {
     if (eraserActive || multiColorMode) return;
     
@@ -261,6 +257,10 @@ function setGrid(parentElem, sketchWidth) {
     for (let i = 0; i < sketchWidth; i++) {
         parentElem.style.gridTemplateColumns += ' auto';
     }
+}
+
+function deleteGrid(parentElem) {
+    parentElem.innerHTML = '';
 }
 
 function createDivGrid(parentElem, sketchWidth, dotBorderWidth) {
