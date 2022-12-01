@@ -5,57 +5,69 @@ mainContainer.setAttribute('class', 'main-container');
 body.appendChild(mainContainer);
 
 const controlPanel = document.createElement('div');
-mainContainer.setAttribute('class', 'control-panel');
+controlPanel.setAttribute('class', 'control-panel');
 mainContainer.appendChild(controlPanel);
+
+const sketchPad = document.createElement('div');
+sketchPad.setAttribute('class', 'sketchpad');
+mainContainer.appendChild(sketchPad);
+
+const colorButtonsDiv = document.createElement('div');
+colorButtonsDiv.setAttribute('class', 'buttons-group');
+controlPanel.appendChild(colorButtonsDiv);
 
 const inputColor = document.createElement('input');
 inputColor.type = 'color';
-controlPanel.appendChild(inputColor);
 inputColor.value = setRandomColor();
+colorButtonsDiv.appendChild(inputColor);
+
+const multiColorButton = document.createElement('button');
+multiColorButton.textContent = 'Multi color mode';
+colorButtonsDiv.appendChild(multiColorButton);
+
+const brightenButton = document.createElement('button');
+brightenButton.textContent = 'Brighten';
+colorButtonsDiv.appendChild(brightenButton);
+
+const darkenButton = document.createElement('button');
+darkenButton.textContent = 'Darken';
+colorButtonsDiv.appendChild(darkenButton);
+
+const cleanButtonsDiv = document.createElement('div');
+cleanButtonsDiv.setAttribute('class', 'buttons-group');
+controlPanel.appendChild(cleanButtonsDiv);
+
+const eraseByDotButton = document.createElement('button');
+eraseByDotButton.textContent = 'Eraser';
+cleanButtonsDiv.appendChild(eraseByDotButton);
+
+const cleanAllButton = document.createElement('button');
+cleanAllButton.textContent = 'Clean pad';
+cleanButtonsDiv.appendChild(cleanAllButton);
+
+const gridSettingsDiv = document.createElement('div');
+gridSettingsDiv.setAttribute('class', 'buttons-group');
+controlPanel.appendChild(gridSettingsDiv);
+
+const switchBorderButton = document.createElement('button');
+switchBorderButton.textContent = 'Enable grid';
+gridSettingsDiv.appendChild(switchBorderButton);
 
 const inputWidthDiv = document.createElement('div');
-controlPanel.appendChild(inputWidthDiv);
+gridSettingsDiv.appendChild(inputWidthDiv);
 
 const widthInput = document.createElement('input');
 widthInput.setAttribute('type', 'range');
 widthInput.setAttribute('min', '1');
-widthInput.setAttribute('max', '100');
+widthInput.setAttribute('max', '32');
 widthInput.setAttribute('id', 'width-range');
 widthInput.value = '8';
 inputWidthDiv.appendChild(widthInput);
 
 const widthLabel = document.createElement('label');
 widthLabel.setAttribute('for', 'width-range');
-widthLabel.textContent = '8 X 8';
+widthLabel.textContent = 'Width: 8 X 8 cells';
 inputWidthDiv.appendChild(widthLabel);
-
-const switchBorderButton = document.createElement('button');
-switchBorderButton.textContent = 'Enable grid';
-controlPanel.appendChild(switchBorderButton);
-
-const multiColorButton = document.createElement('button');
-multiColorButton.textContent = 'Multi color mode';
-controlPanel.appendChild(multiColorButton);
-
-const brightenButton = document.createElement('button');
-brightenButton.textContent = 'Brighten';
-controlPanel.appendChild(brightenButton);
-
-const darkenButton = document.createElement('button');
-darkenButton.textContent = 'Darken';
-controlPanel.appendChild(darkenButton);
-
-const eraseByDotButton = document.createElement('button');
-eraseByDotButton.textContent = 'Eraser';
-controlPanel.appendChild(eraseByDotButton);
-
-const cleanAllButton = document.createElement('button');
-cleanAllButton.textContent = 'Clean pad';
-controlPanel.appendChild(cleanAllButton);
-
-const sketchPad = document.createElement('div');
-sketchPad.setAttribute('class', 'sketchpad');
-mainContainer.appendChild(sketchPad);
 
 let sketchWidth = widthInput.value;
 let dotColor = inputColor.value;
@@ -81,9 +93,19 @@ sketchPad.ontouchstart = (e) => {
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
 
-widthInput.onchange = () => {
-    sketchWidth = widthInput.value;
-    widthLabel.textContent = sketchWidth + ' X ' + sketchWidth;
+inputColor.onchange = () => {
+    darken = false;
+    brighten = false;
+    multiColorMode = false;
+    changeButtonStateColor(brightenButton, brighten);
+    changeButtonStateColor(darkenButton, darken);
+    changeButtonStateColor(multiColorButton, multiColorMode);
+    
+}
+
+widthInput.onchange = (e) => {
+    sketchWidth = e.target.value;
+    widthLabel.textContent = 'Width: ' + sketchWidth + ' X ' + sketchWidth + ' cells';
     deleteGrid(sketchPad);
     createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 }

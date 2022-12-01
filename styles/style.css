@@ -2,10 +2,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 14px;
+    color: #444
 }
 
 html {
     background-color: rgb(250, 250, 250);
+    font-family: sans-serif;
 }
 
 body {
@@ -13,11 +16,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 72px;
+    color: #111
+}
+
+.main-container {
+    display: flex;
+    padding: 32px;
+    gap: 32px
+}
+
+.control-panel {
+    max-width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .sketchpad {
     max-width: 512px;
     background-color: white;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
 }
 
 button {
@@ -47,4 +76,24 @@ input[type="color"] {
 input[type="range"] {
     width: 100%;
     height: 33px;
+}
+
+label {
+    text-align: center;
+}
+
+@media screen and (max-width: 712px) {
+    .main-container {
+        max-width: 512px;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .control-panel {
+        max-width: 100%;
+    }
+
+    .buttons-group {
+        gap: 0;
+    }
 }
