@@ -13,6 +13,22 @@ inputColor.type = 'color';
 controlPanel.appendChild(inputColor);
 inputColor.value = setRandomColor();
 
+const inputWidthDiv = document.createElement('div');
+controlPanel.appendChild(inputWidthDiv);
+
+const widthInput = document.createElement('input');
+widthInput.setAttribute('type', 'range');
+widthInput.setAttribute('min', '1');
+widthInput.setAttribute('max', '100');
+widthInput.setAttribute('id', 'width-range');
+widthInput.value = '8';
+inputWidthDiv.appendChild(widthInput);
+
+const widthLabel = document.createElement('label');
+widthLabel.setAttribute('for', 'width-range');
+widthLabel.textContent = '8 X 8';
+inputWidthDiv.appendChild(widthLabel);
+
 const widthButton = document.createElement('button');
 widthButton.textContent = 'Set width';
 controlPanel.appendChild(widthButton);
@@ -45,7 +61,7 @@ const sketchPad = document.createElement('div');
 sketchPad.setAttribute('class', 'sketchpad');
 mainContainer.appendChild(sketchPad);
 
-let sketchWidth = 8;
+let sketchWidth = widthInput.value;
 let dotColor = inputColor.value;
 let dotBorderWidth = 0;
 let eraserActive = false;
@@ -58,17 +74,23 @@ createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 sketchPad.onmousedown = (e) => {
     let palletColor = inputColor.value;
     let currentColor = palletColor;
-    if ((brighten || darken) && !multiColorMode) currentColor = changeBrightness(palletColor);
+    if ((brighten || darken)) currentColor = changeBrightness(palletColor);
     changeBGC(e.target, currentColor);
     fillDots(currentColor);
 }
 sketchPad.ontouchstart = (e) => {
     fillDots(dotColor);
-    target.ontouchmove = () => changeBGC(dot, color);
+    e.target.ontouchmove = () => changeBGC(dot, color);
 }
 sketchPad.onmouseup = () => stopFillDots(dotColor);
 sketchPad.ontouchend = () => stopFillDots(dotColor);
 
+widthInput.onchange = () => {
+    sketchWidth = widthInput.value;
+    widthLabel.textContent = sketchWidth + ' X ' + sketchWidth;
+    deleteGrid(sketchPad);
+    createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
+}
 
 widthButton.onclick = () => {
     let input = +prompt("input width number", "16");
@@ -89,23 +111,33 @@ switchBorderButton.onclick = (e) => {
 multiColorButton.onclick = (e) => {
     multiColorMode = !multiColorMode;
     changeButtonStateColor(e.target, multiColorMode);
+    if (multiColorMode) {
+        darken = false;
+        brighten = false;
+        changeButtonStateColor(brightenButton, brighten);
+        changeButtonStateColor(darkenButton, darken);
+    }
 }
 
 brightenButton.onclick = (e) => {
     brighten = !brighten
     changeButtonStateColor(e.target, brighten);
-    if (brighten) if (darken) {
-        darken = !darken
+    if (brighten){
+        darken = false;
+        multiColorMode = false;
         changeButtonStateColor(darkenButton, darken);
+        changeButtonStateColor(multiColorButton, multiColorMode);
     }
 }
 
 darkenButton.onclick = (e) => {
     darken = !darken
     changeButtonStateColor(e.target, darken);
-    if (darken) if (brighten) {
-        brighten = !brighten
+    if (darken){
+        brighten = false;
+        multiColorMode = false;
         changeButtonStateColor(brightenButton, brighten);
+        changeButtonStateColor(multiColorButton, multiColorMode);
     }
 }
 
@@ -168,19 +200,21 @@ function stopFillDots() {
 }
 
 function changeBGC(elem, color) {
-    let currentElemColor = window.getComputedStyle(elem).backgroundColor;
-    if ((brighten || darken) && !multiColorMode) {
-        color = changeBrightness(currentElemColor);
-    }    
+    let currentElemColor = window.getComputedStyle(elem).backgroundColor;    
     if (eraserActive) color = 'white';
-    else if (multiColorMode) color = setRandomColor();
+    else {
+        if ((brighten || darken)) {
+            color = changeBrightness(currentElemColor);
+        } 
+        if (multiColorMode) color = setRandomColor()
+    };
     elem.style.backgroundColor = color;
 }
 
 function convertComputedRGBColorToRGBColorArray(colorString){
     return colorString.slice(4,-1).split(', ')
 }
-/*
+/* RESERVE FUCNCTION
 function convertHexColorToRGBColorArray() {
     let processColorValue = color.slice(1);
     const processColorValueArray = [
@@ -198,11 +232,11 @@ function changeBrightness(color) {
     for (let i  = 0; i < processColorValueArray.length; i++) {
         processColorValueArray[i] = +processColorValueArray[i];
         if (brighten) {
-            if (processColorValueArray[i] <= 230) processColorValueArray[i] += 25;
+            if (processColorValueArray[i] <= 235) processColorValueArray[i] += 20;
             else processColorValueArray[i] = 255;
         } else {
             if (darken) {
-                if (processColorValueArray[i] >= 25) processColorValueArray[i] -= 25;
+                if (processColorValueArray[i] >= 20) processColorValueArray[i] -= 20;
                 else processColorValueArray[i] = 0;
             }
         }     
