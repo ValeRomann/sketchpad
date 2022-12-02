@@ -95,20 +95,6 @@ inputColor.onchange = () => {
     changeButtonStateColor(multiColorButton, multiColorMode);    
 }
 
-widthInput.onchange = (e) => {
-    sketchWidth = e.target.value;
-    widthLabel.textContent = 'Width: ' + sketchWidth + ' X ' + sketchWidth + ' cells';
-    deleteGrid(sketchPad);
-    createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
-}
-
-switchBorderButton.onclick = (e) => {
-    if (dotBorderWidth === 0) dotBorderWidth = 1;
-    else dotBorderWidth = 0;
-    changeButtonStateColor(e.target, dotBorderWidth);
-    switchBorder();
-}
-
 multiColorButton.onclick = (e) => {
     multiColorMode = !multiColorMode;
     changeButtonStateColor(e.target, multiColorMode);
@@ -152,6 +138,33 @@ cleanAllButton.onclick = () => {
     for (let dot of dots) {
         dot.style.backgroundColor = 'white';
     }
+}
+
+switchBorderButton.onclick = (e) => {
+    if (dotBorderWidth === 0) dotBorderWidth = 1;
+    else dotBorderWidth = 0;
+    changeButtonStateColor(e.target, dotBorderWidth);
+    switchBorder();
+}
+
+widthInput.onclick = (e) => {
+    handleInputRange(e);
+}
+/*
+widthInput.onchange = (e) => {
+    e.preventDefault();
+    console.log(e);
+    sketchWidth = e.target.value;
+    widthLabel.textContent = 'Width: ' + sketchWidth + ' X ' + sketchWidth + ' cells';
+    deleteGrid(sketchPad);
+    createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
+}*/
+
+function handleInputRange(e) {
+    sketchWidth = e.target.value;
+    widthLabel.textContent = 'Width: ' + sketchWidth + ' X ' + sketchWidth + ' cells';
+    deleteGrid(sketchPad);
+    createDivGrid(sketchPad, sketchWidth, dotBorderWidth);
 }
 
 function changeButtonStateColor(e, mode) {
