@@ -83,12 +83,8 @@ sketchPad.onmousedown = (e) => {
     e.preventDefault();
     startPainting(e);
 }
-sketchPad.ontouchstart = (e) => {
-    e.preventDefault();
-    startPainting(e);
-}
+
 sketchPad.onmouseup = () => stopFillDots(dotColor);
-sketchPad.ontouchend = () => stopFillDots(dotColor);
 
 inputColor.onchange = () => {
     darken = false;
@@ -198,11 +194,6 @@ function fillDots(color) {
         dot.onmouseover = (e) => {
             e.preventDefault();
             changeBGC(dot, color);
-        }
-        dot.ontouchmove = (e) => {
-            e.preventDefault();
-            console.log(e);
-            e.target.style.backgroundColor = changeBGC(dot, color);
         }
     }
 }
